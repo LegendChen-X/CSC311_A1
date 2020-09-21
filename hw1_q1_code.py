@@ -94,23 +94,24 @@ def select_knn_model(clean_real_path,clean_fake_path,improvement):
     return result
     
 
-def draw_graph(res):
+def draw_graph(res,name):
     train_set = [res[item][0] for item in range(1,21)]
     validation_set = [res[item][-1] for item in range(1,21)]
     k_set = [(i+1) for i in range(20)]
 
     plt.plot(k_set,train_set,label="training")
-    plt.plot(k_set,validation_set,label="training")
+    plt.plot(k_set,validation_set,label="validation")
     plt.xlabel("k")
     plt.ylabel("accuracy")
+    plt.title(name)
     plt.legend()
     plt.show()
     
 ###########------main------###########
 res = select_knn_model("clean_real.txt","clean_fake.txt",False)
-draw_graph(res)
+draw_graph(res,"Original Graph")
 improve_res = select_knn_model("clean_real.txt","clean_fake.txt",True)
-draw_graph(improve_res)
+draw_graph(improve_res,"Improvement Graph")
 
 
 
