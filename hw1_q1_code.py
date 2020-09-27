@@ -103,6 +103,7 @@ def draw_graph(res,name):
     plt.plot(k_set,validation_set,label="validation")
     plt.xlabel("k")
     plt.ylabel("accuracy")
+    plt.xticks(k_set)
     plt.title(name)
     plt.legend()
     plt.show()
