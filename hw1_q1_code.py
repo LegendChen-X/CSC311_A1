@@ -112,8 +112,3 @@ res = select_knn_model("clean_real.txt","clean_fake.txt",False)
 draw_graph(res,"Original Graph")
 improve_res = select_knn_model("clean_real.txt","clean_fake.txt",True)
 draw_graph(improve_res,"Improvement Graph")
-
-
-
-    
-    
