@@ -7,26 +7,32 @@ def shuffle_data(data):
     random_permutation = np.random.permutation(len(X))
     res = {'X':[],'t':[]}
     for value in random_permutation:
-        res['t'].append(data[0][value])
-        res['X'].append(data[1][value])
+        res['t'].append(t[value])
+        res['X'].append(X[value])
     return res
-    
+
 def split_data(data,num_folds,fold):
     t = data['t']
-    X = data['X']
+    X = np.array(data['X'])
     block_length = len(t) // num_folds
     start_point = block_length * (fold - 1)
     end_point = block_length * fold
-    data_fold = {}
-    data_rest = {}
-    data_fold['X'] = X[start_point:end_point,:]
+    data_fold = {'X':[],'t':[]}
+    data_rest = {'X':[],'t':[]}
+    data_fold['X'] = X[start_point:end_point, :]
     data_fold['t'] = t[start_point:end_point]
-    data_rest['X'] = np.concatenate((X[:start,:],X[end:,:]))
+    data_rest['X'] = np.concatenate((X[:start_point,:],X[end_point:,:]))
     data_rest['t'] = np.concatenate((t[:start_point],t[end_point:]))
     return data_fold, data_rest
     
-def train_model(data,lambd):
-    
+def train_model(data, lambd):
+    t = data['t']
+    X = data['X']
+    X_norm = np.dot(X.T, X)
+    N = len(X[0])
+    invert_matrix = np.linalg.inv(X_norm + lambd * N * np.identity(N))
+    res = np.dot(invert_matrix, np.dot(X.T,t))
+    return res
 
 def predict(data,model):
     return np.dot(data['X'],model)
@@ -36,7 +42,7 @@ def loss(data,model):
     prediction = predict(data,model)
     return float(np.sum((t-prediction)**2)/(2*len(t)))
 
-def cross_validation(data,num_folds,lambd_seq):
+def cross_validation(data, num_folds, lambd_seq):
     cv_error = np.zeros(len(lambd_seq))
     data = shuffle_data(data)
     for i in range(len(lambd_seq)):
@@ -58,7 +64,17 @@ def train_and_test_error(data_train,data_test,lambd_seq):
         test_error.append(loss(data_test,model))
     return train_error, test_error
     
-def draw_graph(train_error,test_error,cv_error_0,cv_error_1,title):
+def draw_graph(train_error,test_error,cv_error_5,cv_error_10,lambd_seq):
+    plt.plot(lambd_seq, train_error, label="train error")
+    plt.plot(lambd_seq, test_error, label="test error")
+    plt.plot(lambd_seq, cv_error_5, label="5_folds error")
+    plt.plot(lambd_seq, cv_error_10, label="10_folds error")
+    plt.xlabel("lambd")
+    plt.ylabel("error")
+    plt.title("Loss Graph")
+    plt.legend()
+    plt.show()
+    
 
 ###########------main------###########
 if __name__ == '__main__':
@@ -70,7 +86,10 @@ if __name__ == '__main__':
         lambd_seq.append(0.00005 + interval * i)
         
     train_error, test_error = train_and_test_error(data_train,data_test,lambd_seq)
-    
     print(train_error)
     print(test_error)
+    
+    cv_error_5 = cross_validation(data_train, 5, lambd_seq)
+    cv_error_10 = cross_validation(data_train, 10, lambd_seq)
+    draw_graph (train_error, test_error, cv_error_5, cv_error_10,lambd_seq)
     
