@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 
 ###########------functions------###########
-def load_data(clean_real_path,clean_fake_path):
+def load_data(clean_real_path: str,clean_fake_path: str):
     real_news_file = open(clean_real_path,'r')
     fake_nes_file = open(clean_fake_path,'r')
     
@@ -36,7 +36,7 @@ def load_data(clean_real_path,clean_fake_path):
     return {"X_train": X_train, "X_valid": X_valid, "X_test": X_test, "y_train": y_train, "y_valid": y_valid, "y_test": y_test, "X_feature": X_feature}
     
     
-def select_knn_model(clean_real_path,clean_fake_path,improvement):
+def select_knn_model(clean_real_path: str,clean_fake_path: str,improvement: bool):
     result = {}
     data_set = load_data(clean_real_path,clean_fake_path)
     #Get data
