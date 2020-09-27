@@ -21,7 +21,7 @@ def load_data(clean_real_path,clean_fake_path):
     total_num = real_news_num + fake_news_num
     
     vectorizer = CountVectorizer()
-    X = vectorizer.fit_transform(all_news).toarray()
+    X = vectorizer.fit_transform(all_news)
     
     X_feature = vectorizer.get_feature_names()
     
