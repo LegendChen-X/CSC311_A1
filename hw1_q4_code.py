@@ -57,6 +57,8 @@ def train_and_test_error(data_train,data_test,lambd_seq):
         train_error.append(loss(data_train,model))
         test_error.append(loss(data_test,model))
     return train_error, test_error
+    
+def draw_graph(train_error,test_error,cv_error_0,cv_error_1,title):
 
 ###########------main------###########
 if __name__ == '__main__':
